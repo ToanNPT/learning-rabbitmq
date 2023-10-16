@@ -48,4 +48,25 @@ public class RabbitmqConfig {
         );
     }
 
+    // example 2, rpc
+    public static final String REQUEST_QUEUE = "queue_request";
+    public static final String TOPIC_EXCHANGE = "request_exchange";
+
+    public static final String RELY_QUEUE = "queue_rely";
+
+    @Bean
+    public Declarables declareRabbit() {
+        Queue queue = new Queue(REQUEST_QUEUE);
+        Queue relyQueue = new Queue(RELY_QUEUE);
+        TopicExchange topicExchange = new TopicExchange(TOPIC_EXCHANGE);
+        return new Declarables(
+                queue,
+                relyQueue,
+                topicExchange,
+                BindingBuilder.bind(queue).to(topicExchange).with(REQUEST_QUEUE),
+                BindingBuilder.bind(relyQueue).to(topicExchange).with(RELY_QUEUE)
+        );
+    }
+
+
 }
